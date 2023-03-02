@@ -1,5 +1,4 @@
-import axios from 'axios';
-import express, { Express, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { Router } from 'express';
 import { getCurrencyData } from '../utils/getCurrencyData';
 
