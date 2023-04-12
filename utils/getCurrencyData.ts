@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { CURRENCY_SYMBOLS } from '../contants/currencyNames';
 
 type Quote = {
   price: number;
@@ -43,18 +44,52 @@ export const getCurrencyData = async () => {
         'X-CMC_PRO_API_KEY': process.env.API_CURRENCY_KEY as string,
       },
     });
-    return response.data as Currency[];
+
+    return response.data.data as Currency[];
   } catch (error) {
     console.log('error', error);
   }
 };
 
+// const DATA = [
+//   {
+//     id: 1,
+//     name: 'Bitcoin',
+//     symbol: 'BTC',
+//     priceInUsd: 25939.032054440144,
+//   },
+//   {
+//     id: 1027,
+//     name: 'Ethereum',
+//     symbol: 'ETH',
+//     priceInUsd: 1768.2280050031113,
+//   },
+//   {
+//     id: 825,
+//     name: 'Tether',
+//     symbol: 'USDT',
+//     priceInUsd: 1.0035339135425718,
+//   },
+//   {
+//     id: 74,
+//     name: 'Dogecoin',
+//     symbol: 'DOGE',
+//     priceInUsd: 0.07697583840096447,
+//   },
+// ];
+
 export const getData = async () => {
   const data = await getCurrencyData();
-  const result = data?.map(({ id, name, quote }) => ({
-    id,
-    name,
-    priceInUsd: quote['USD'].price,
-  }));
+  const result = data
+    ?.map(({ id, name, quote, symbol }) => ({
+      id,
+      name,
+      symbol,
+      priceInUsd: quote['USD'].price,
+    }))
+    .filter((cur) => {
+      return CURRENCY_SYMBOLS.includes(cur.symbol);
+    });
+
   return result;
 };
